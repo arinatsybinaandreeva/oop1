@@ -1,0 +1,90 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Publication {
+protected:
+    string title;
+    float price;
+
+public:
+    Publication(string title = "", float price = 0.0) : title(title), price(price) {}
+
+    void getdata() {
+        getline(cin, title);
+        cin >> price;
+        cin.ignore(); 
+    }
+
+    void putdata() {
+        cout << "Название: " << title << endl;
+        cout << "Цена: " << price << endl;
+    }
+};
+
+class Book : public Publication{
+protected:
+    int pages;
+
+public:
+    Book(string title = "", float price = 0.0, int pages = 0) : Publication(title, price), pages(pages) {}
+
+    void getdata(){
+        Publication::getdata();
+        cin >> pages;
+        cin.ignore(); 
+    }
+
+    void putdata(){
+        Publication::putdata();
+        cout << "Количество страниц: " << pages << endl;
+    }
+};
+
+class Audiobook : public Publication{
+protected:
+    int duration;
+
+public:
+Audiobook(string title = "", float price = 0.0, int duration = 0) : Publication(title, price), duration(duration) {}
+
+    void getdata() {
+        Publication::getdata();
+        cin >> duration;
+        cin.ignore(); 
+    }
+
+    void putdata() {
+        Publication::putdata();
+        cout << "Длительность записи: " << duration << " минут" << endl;
+    }
+};
+Audiobook(string title = "", float price = 0.0, int duration = 0) : Publication(title, price), duration(duration) {}
+
+    void getdata() {
+        Publication::getdata();
+        cin >> duration;
+        cin.ignore(); 
+    }
+
+    void putdata() {
+        Publication::putdata();
+        cout << "Длительность записи: " << duration << " минут" << endl;
+    }
+};
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+    Book book1("Капитанская дочка", 198.99, 1335);
+    book1.putdata();
+
+    Audiobook audiobook1("аудио", 122.99, 60);
+    audiobook1.putdata();
+
+    Book book2;
+    book2.getdata();
+    book2.putdata();
+
+    return 0;
+}
