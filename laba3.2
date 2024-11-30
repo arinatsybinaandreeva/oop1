@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <random>
+using namespace std;
+class Base {
+public:
+    virtual ~Base() = default;
+    virtual void printBehavior() const { cout << "Базовый класс\n"; }
+    virtual int getValue() const { return 0; }
+};
+class Derived : public Base {
+public:
+    void printBehavior() const override { cout << "Производый класс\n"; }
+    int getValue() const override { return 10; }
+};
+vector<unique_ptr<Base>> storage;
+void add(unique_ptr<Base>&& obj) {
+    storage.push_back(std::move(obj));
+}
+int main() {
+    setlocale(LC_ALL, "Rus");
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> distrib(1, 5); // Создаем от 1 до 5 объектов
+    for (int i = 0; i < distrib(gen); ++i) {
+        int type = distrib(gen) % 2; // 0 - Base, 1 - Derived
+        if (type == 0) {
+            add(make_unique<Base>());
+        }
+        else {
+            add(make_unique<Derived>());
+        }
+    }
+    cout << "Поведение объекта:\n";
+    for (const auto& obj : storage) {
+        obj->printBehavior();
+        cout << "Value: " << obj->getValue() << endl;
+    }
+    storage.clear();
+    return 0;
+}
