@@ -1,0 +1,91 @@
+#include <iostream>
+#include <vector>
+#include <memory> // Для unique_ptr
+
+// Базовый класс
+class Человек {
+public:
+    virtual ~Человек() = default; // Виртуальный деструктор для полиморфизма
+    virtual std::string getStatus() const = 0; // Чисто виртуальная функция
+    virtual void printInfo() const = 0; // Чисто виртуальная функция
+    std::string getName() const { return name; }
+    void setName(const std::string& n) { name = n; }
+
+protected:
+    Человек(const std::string& n) : name(n) {}
+    std::string name;
+};
+
+// Производные классы
+class Дошкольник : public Человек {
+public:
+    Дошкольник(const std::string& n) : Человек(n) {}
+    std::string getStatus() const override { return "Дошкольник"; }
+    void printInfo() const override { std::cout << "Имя: " << getName() << ", Статус: " << getStatus() << std::endl; }
+};
+
+class Школьник : public Человек {
+public:
+    Школьник(const std::string& n) : Человек(n) {}
+    std::string getStatus() const override { return "Школьник"; }
+    void printInfo() const override { std::cout << "Имя: " << getName() << ", Статус: " << getStatus() << std::endl; }
+};
+
+class Студент : public Человек {
+public:
+    Студент(const std::string& n) : Человек(n) {}
+    std::string getStatus() const override { return "Студент"; }
+    void printInfo() const override { std::cout << "Имя: " << getName() << ", Статус: " << getStatus() << std::endl; }
+};
+
+class Работающий : public Человек {
+public:
+    Работающий(const std::string& n) : Человек(n) {}
+    std::string getStatus() const override { return "Работающий"; }
+    void printInfo() const override { std::cout << "Имя: " << getName() << ", Статус: " << getStatus() << std::endl; }
+};
+
+
+// Шаблонный класс для хранения массива указателей
+template <typename T>
+class МассивУказателей {
+public:
+    void add(std::unique_ptr<T> ptr) { data.push_back(std::move(ptr)); }
+    T* operator[](size_t index) { return data[index].get(); }
+    const T* operator[](size_t index) const { return data[index].get(); }
+    size_t size() const { return data.size(); }
+
+private:
+    std::vector<std::unique_ptr<T>> data;
+};
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+    // Создание объектов
+    std::unique_ptr<Дошкольник> d = std::make_unique<Дошкольник>("Имя1");
+    std::unique_ptr<Школьник> s = std::make_unique<Школьник>("Имя2");
+    std::unique_ptr<Студент> st = std::make_unique<Студент>("Имя3");
+    std::unique_ptr<Работающий> r = std::make_unique<Работающий>("Имя4");
+
+    //Использование шаблонного класса
+    МассивУказателей<Человек> люди;
+    люди.add(std::move(d));
+    люди.add(std::move(s));
+    люди.add(std::move(st));
+    люди.add(std::move(r));
+
+    //Вывод информации
+    for (size_t i = 0; i < люди.size(); ++i) {
+        люди[i]->printInfo();
+    }
+
+
+    //Пример с другим типом
+    МассивУказателей<int> числа;
+    числа.add(std::make_unique<int>(10));
+    числа.add(std::make_unique<int>(20));
+    std::cout << "Число 1: " << *числа[0] << std::endl;
+    std::cout << "Число 2: " << *числа[1] << std::endl;
+
+    return 0;
+}
