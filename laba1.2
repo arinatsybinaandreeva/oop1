@@ -1,0 +1,27 @@
+#include <iostream>
+#include <map>
+// подключаем библиотеку времени.
+using namespace std;
+//Объявляем глобальные переменные 
+class Point {
+private:
+    string x;
+    string y;
+    string z;
+public:
+    Point(string v, string b, string n)
+    {
+        x = v;
+        y = b;
+        z = n;
+    };
+};
+int main()
+{
+    setlocale(LC_ALL, "Rus");
+    string d, f, g;
+    cin >> d;
+    cin >> f;
+    cin >> g;
+    Point a(d,f,g);
+}
