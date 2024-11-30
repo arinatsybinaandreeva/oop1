@@ -1,0 +1,43 @@
+#include <vector>
+#include <memory>
+#include <string>
+#include <iostream>
+using namespace std;
+class Деталь {
+public:
+    virtual ~Деталь() = default;
+    virtual string getName() const = 0;
+protected:
+    Деталь() = default;
+};
+class Сборка : public Деталь {
+public:
+    static unique_ptr<Сборка> create(const string& name) {
+        return make_unique<Сборка>(name);
+    }
+    string getName() const override { return name_; }
+    Сборка(const string& name) : name_(name) {}
+    string name_;
+};
+class Part : public Деталь {
+public:
+    static unique_ptr<Part> create(const string& name) {
+        return make_unique<Part>(name);
+    }
+    string getName() const override { return name_; }
+    Part(const string& name) : name_(name) {}
+    string name_;
+};
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+    vector<unique_ptr<Деталь>> details;
+    details.push_back(Сборка::create("Двигатель"));
+    details.push_back(Part::create("Болт"));
+    details.push_back(Сборка::create("Шасси"));
+    details.push_back(Part::create("Гайка"));
+    for (const auto& detail : details) {
+        cout << detail->getName() << endl;
+    }
+    return 0;
+}
